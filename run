@@ -1,0 +1,6 @@
+pushd .
+make
+cp -r assets build
+cd build/
+./pacman
+popd

@@ -1,7 +1,8 @@
 pushd .
 make clean
-make
+mkdir build
 cp -r assets build
-cd build/
-./pacman
+make WEB=1
+cd build
+emrun .
 popd

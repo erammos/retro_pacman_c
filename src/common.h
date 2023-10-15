@@ -3,8 +3,8 @@
 
 #include <SDL2/SDL_render.h>
 
-#define WINDOW_SCALE_X 2
-#define WINDOW_SCALE_Y 2
+#define WINDOW_SCALE_X 1
+#define WINDOW_SCALE_Y 1
 #define TILE(x, y) y * 17 + x
 #define MAX(a, b) (a > b) ? a : b
 #define LEVEL_SIZE 33
@@ -80,6 +80,7 @@ typedef struct
   int atlas_index;
   direction dir;
 } entity;
+
 
 void blit (SDL_Renderer *renderer, SDL_Texture *texture, int index, int x,
            int y, float angle);

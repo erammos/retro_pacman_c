@@ -6,6 +6,49 @@
 #include <SDL2/SDL_image.h>
 #include <stdint.h>
 #include <stdio.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
+typedef struct
+{
+  entity *pacman;
+  tile_map_t *tilemap;
+  SDL_Renderer *renderer;
+  float move_delay;
+  float delta_time;
+  int is_running;
+} game_state;
+
+static void
+mainLoop (game_state *state)
+{
+  if (!state->is_running)
+    {
+#ifdef __EMSCRIPTEN__
+      emscripten_cancel_main_loop ();
+#else
+      exit (0);
+#endif
+    }
+
+  float then = SDL_GetTicks ();
+  state->is_running = pacman_check_input (state->pacman);
+  state->move_delay = MAX (0, state->move_delay - state->delta_time);
+  if (state->move_delay == 0)
+    {
+      pacman_update (state->pacman, state->tilemap);
+      state->move_delay = 5 * 20;
+    }
+
+  SDL_RenderSetScale (state->renderer, WINDOW_SCALE_X, WINDOW_SCALE_Y);
+  SDL_RenderClear (state->renderer);
+  tile_map_draw (state->renderer);
+  pacman_draw (state->pacman, state->renderer);
+  SDL_RenderPresent (state->renderer);
+  SDL_Delay (1);
+  state->delta_time = SDL_GetTicks () - then;
+}
 
 int
 main (void)
@@ -37,30 +80,28 @@ main (void)
 
   SDL_Texture *texture
       = loadTexture ("./assets/pacman_textures.png", renderer);
+  if (texture == NULL)
+    {
+      printf ("Couldn't load texture\n");
+      exit (1);
+    }
   tile_map_t *tilemap = tile_map_create ("./assets/map0", texture);
-
   entity *pacman = pacman_create (tilemap, texture);
 
-  float delta_time = 0.0f;
-  float move_delay = 0.0f;
+  game_state state = { .delta_time = 0.0f,
+                       .move_delay = 0.0f,
+                       .tilemap = tilemap,
+                       .pacman = pacman,
+                       .renderer = renderer,
+                       .is_running = 1 };
+#ifdef __EMSCRIPTEN__
+  printf ("Set main loop\n");
+  emscripten_set_main_loop_arg ((em_arg_callback_func)mainLoop, (void *)&state,
+                                0, 1);
+#else
   while (1)
     {
-
-      float then = SDL_GetTicks ();
-      pacman_check_input (pacman);
-      move_delay = MAX (0, move_delay - delta_time);
-      if (move_delay == 0)
-        {
-          pacman_update (pacman, tilemap);
-          move_delay = 5 * 20;
-        }
-
-      SDL_RenderSetScale (renderer, WINDOW_SCALE_X, WINDOW_SCALE_Y);
-      SDL_RenderClear (renderer);
-      tile_map_draw (renderer);
-      pacman_draw (pacman, renderer);
-      SDL_RenderPresent (renderer);
-      SDL_Delay (1);
-      delta_time = SDL_GetTicks () - then;
+      mainLoop (&state);
     }
+#endif
 }

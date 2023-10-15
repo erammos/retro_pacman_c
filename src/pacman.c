@@ -68,6 +68,8 @@ pacman_create (tile_map_t *tile_map, SDL_Texture *texture)
   entity *pacman = malloc (sizeof (entity));
   pacman->texture = texture;
   pacman->atlas_index = PACMAN_LEFT;
+  pacman->dir.x = -1;
+  pacman->dir.y = 0;
   for (int i = 0; i < LEVEL_SIZE * LEVEL_SIZE; i++)
     {
       if (tile_map->grid[i] == 'c')
@@ -81,7 +83,7 @@ pacman_create (tile_map_t *tile_map, SDL_Texture *texture)
   return NULL;
 }
 
-void
+int
 pacman_check_input (entity *pacman)
 {
   SDL_Event event;
@@ -90,7 +92,7 @@ pacman_check_input (entity *pacman)
       switch (event.type)
         {
         case SDL_QUIT:
-          exit (0);
+          return 0;
         case SDL_KEYDOWN:
           {
             direction dir = { 0, 0 };
@@ -119,4 +121,5 @@ pacman_check_input (entity *pacman)
           break;
         }
     }
+  return 1;
 }

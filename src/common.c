@@ -1,7 +1,10 @@
 #include "common.h"
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_log.h>
 
 void
-blit (SDL_Renderer * renderer, SDL_Texture *texture, int index, int x, int y, float angle)
+blit (SDL_Renderer *renderer, SDL_Texture *texture, int index, int x, int y,
+      float angle)
 {
   int w, h;
   SDL_QueryTexture (texture, NULL, NULL, &w, &h);
@@ -20,4 +23,15 @@ blit (SDL_Renderer * renderer, SDL_Texture *texture, int index, int x, int y, fl
   SDL_Rect dest = { .x = x, .y = y, .w = tileWidth, .h = tileHeight };
   SDL_RenderCopyEx (renderer, texture, &src, &dest, angle, NULL,
                     SDL_FLIP_NONE);
+}
+
+SDL_Texture *
+loadTexture (char *filename, SDL_Renderer *renderer)
+{
+  SDL_Texture *texture;
+  SDL_LogMessage (SDL_LOG_CATEGORY_APPLICATION, SDL_LOG_PRIORITY_INFO,
+                  "Loading %s", filename);
+
+  texture = IMG_LoadTexture (renderer, filename);
+  return texture;
 }

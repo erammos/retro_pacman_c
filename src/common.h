@@ -75,6 +75,7 @@ typedef struct
 
 typedef struct
 {
+  SDL_Texture *texture;
   int x;
   int y;
   int atlas_index;
@@ -82,4 +83,5 @@ typedef struct
 } entity;
 void blit (SDL_Renderer *renderer, SDL_Texture *texture, int index, int x,
            int y, float angle);
+SDL_Texture * loadTexture (char *filename, SDL_Renderer * renderer);
 #endif

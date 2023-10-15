@@ -1,12 +1,11 @@
+#include "common.h"
+#include "pacman.h"
+#include "tile_map.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_haptic.h>
 #include <SDL2/SDL_image.h>
 #include <stdint.h>
 #include <stdio.h>
-
-#include "common.h"
-#include "pacman.h"
-#include "tile_map.h"
 
 int
 main (void)

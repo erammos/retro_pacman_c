@@ -1,9 +1,7 @@
-
-#include <SDL2/SDL_events.h>
 #define pacman_IMPORT
 #include "common.h"
 #include "tile_map.h"
-
+#include <SDL2/SDL_events.h>
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
 #include <assert.h>

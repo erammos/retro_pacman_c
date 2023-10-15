@@ -1,18 +1,14 @@
 
 #define tile_map_IMPORT
-#include "common.h"
 #include "tile_map.h"
-
+#include "common.h"
 #include <SDL2/SDL_rect.h>
 #include <SDL2/SDL_render.h>
+#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 
-/* Private macros and constants */
-/* Private types */
-/* Declaration of private opaque struct */
-tile_map_t tile_map = {0};
+tile_map_t tile_map = { 0 };
 
 tile tile_table[MAX_TABLE]
     = { [TILE_H_LINE] = { .atlas_index = TILE (7, 13), .rotation = 0 },
@@ -31,14 +27,15 @@ tile tile_table[MAX_TABLE]
         [TILE_L_EDGE] = { .atlas_index = TILE (9, 13), .rotation = 0 },
         [TILE_FOOD] = { .atlas_index = TILE (12, 0), .rotation = 0 },
         [TILE_SUPER_FOOD] = { .atlas_index = TILE (13, 0), .rotation = 0 } };
+
 tile_map_t *
-tile_map_create (const char *filename, SDL_Texture * texture)
+tile_map_create (const char *filename, SDL_Texture *texture)
 {
   FILE *file = fopen (filename, "r");
   char *line = NULL;
   ssize_t len = 0;
   size_t size = 0;
-  tile_map.grid = malloc(LEVEL_SIZE * LEVEL_SIZE * sizeof(char));
+  tile_map.grid = malloc (LEVEL_SIZE * LEVEL_SIZE * sizeof (char));
   tile_map.texture = texture;
 
   int i = 0, j = 0;
@@ -68,7 +65,7 @@ tile_map_get_char (int x, int y)
 }
 
 void
-tile_map_draw (SDL_Renderer * renderer)
+tile_map_draw (SDL_Renderer *renderer)
 {
   for (int i = 0; i < LEVEL_SIZE; i++)
     {
@@ -83,8 +80,8 @@ tile_map_draw (SDL_Renderer * renderer)
           if (c != 0 && c != '\0' && c != '\n' && c != 'c' && c != ' ')
             {
               tile t = tile_table[c];
-              blit (renderer,tile_map.texture, t.atlas_index, j * TILE_SIZE, i * TILE_SIZE,
-                    t.rotation);
+              blit (renderer, tile_map.texture, t.atlas_index, j * TILE_SIZE,
+                    i * TILE_SIZE, t.rotation);
             }
         }
     }
@@ -104,10 +101,9 @@ tile_map_is_valid_move (direction dir, int x, int y)
   char tile = tile_map.grid[next_i * LEVEL_SIZE + next_j];
   return tile == SPACE || tile == TILE_FOOD || tile == TILE_SUPER_FOOD;
 }
-/* Private global variables */
-/* Private functions */
-/* Implementation of the public functions */
-void tile_map_free(void)
+
+void
+tile_map_free (void)
 {
-  free(tile_map.grid);
+  free (tile_map.grid);
 }

@@ -1,17 +1,16 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-
-
 #include <SDL2/SDL_render.h>
+
 #define WINDOW_SCALE_X 2
 #define WINDOW_SCALE_Y 2
 #define TILE(x, y) y * 17 + x
 #define MAX(a, b) (a > b) ? a : b
 #define LEVEL_SIZE 33
 #define TILE_SIZE 20
-#define SCREEN_WIDTH TILE_SIZE * LEVEL_SIZE * WINDOW_SCALE_X
-#define SCREEN_HEIGHT TILE_SIZE * LEVEL_SIZE * WINDOW_SCALE_Y
+#define SCREEN_WIDTH TILE_SIZE *LEVEL_SIZE *WINDOW_SCALE_X
+#define SCREEN_HEIGHT TILE_SIZE *LEVEL_SIZE *WINDOW_SCALE_Y
 #define MAX_TABLE 256
 
 #define PACMAN_LEFT TILE (4, 3)
@@ -81,7 +80,8 @@ typedef struct
   int atlas_index;
   direction dir;
 } entity;
+
 void blit (SDL_Renderer *renderer, SDL_Texture *texture, int index, int x,
            int y, float angle);
-SDL_Texture * loadTexture (char *filename, SDL_Renderer * renderer);
+SDL_Texture *loadTexture (char *filename, SDL_Renderer *renderer);
 #endif
